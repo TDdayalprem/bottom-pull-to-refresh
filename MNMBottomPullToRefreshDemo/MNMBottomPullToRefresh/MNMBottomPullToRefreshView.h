@@ -51,6 +51,15 @@ typedef enum {
 @property (nonatomic, readonly) CGFloat fixedHeight;
 
 /**
+ *  Custom for refresh view Items
+ */
+@property (nonatomic, weak) NSString *pullText;
+@property (nonatomic, weak) NSString *releaseText;
+@property (nonatomic, weak) NSString *loadingText;
+@property (nonatomic, weak) UIColor *customBackgroundColor;
+@property (nonatomic, weak) UIImage *customPullImage;
+
+/**
  * Changes the state of the control depending on state value.
  *
  * Values of *MNMBottomPullToRefreshViewState*:

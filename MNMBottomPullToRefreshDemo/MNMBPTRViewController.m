@@ -58,7 +58,8 @@
     reloads_ = -1;
     
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:table_ withClient:self];
-	
+    pullToRefreshManager_.customBackgroundColor = [UIColor redColor];
+    pullToRefreshManager_.customPullImage = nil;
 	self.title = @"Refresh";
 }
 
@@ -125,7 +126,7 @@
         result.textLabel.backgroundColor = [UIColor clearColor];
     }
     
-    result.textLabel.text = [NSString stringWithFormat:@"Row %i", indexPath.row];
+    result.textLabel.text = [NSString stringWithFormat:@"Row %li", (long)indexPath.row];
     
     UIView *backgroundView = [[UIView alloc] initWithFrame:result.frame];
     
@@ -201,7 +202,7 @@
  */
 - (void)bottomPullToRefreshTriggered:(MNMBottomPullToRefreshManager *)manager {
     
-    [self performSelector:@selector(loadTable) withObject:nil afterDelay:1.0f];
+    [self performSelector:@selector(loadTable) withObject:nil afterDelay:5.0f];
 }
 
 @end

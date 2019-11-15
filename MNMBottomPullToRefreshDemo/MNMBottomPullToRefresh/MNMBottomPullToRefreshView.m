@@ -84,6 +84,11 @@
 @synthesize rotateIconWhileBecomingVisible = rotateIconWhileBecomingVisible_;
 @dynamic isLoading;
 @synthesize fixedHeight = fixedHeight_;
+@synthesize pullText = pullText_;
+@synthesize releaseText = releaseText_;
+@synthesize loadingText = loadingText_;
+@synthesize customBackgroundColor = customBackgroundColor_;
+@synthesize customPullImage = customPullImage_;
 
 #pragma mark -
 #pragma mark Initialization
@@ -99,7 +104,7 @@
     if (self = [super initWithFrame:frame]) {
         
         [self setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin];
-        [self setBackgroundColor:[UIColor colorWithWhite:0.f alpha:1.0f]];
+        [self setBackgroundColor:customBackgroundColor_ == nil ? [UIColor grayColor] : customBackgroundColor_];
         
         containerView_ = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, CGRectGetWidth(frame), CGRectGetHeight(frame))];
         
@@ -108,7 +113,7 @@
         
         [self addSubview:containerView_];
         
-        UIImage *iconImage = [UIImage imageNamed:MNM_BOTTOM_PTR_ICON_BOTTOM_IMAGE];
+        UIImage *iconImage = customPullImage_;
         
         iconImageView_ = [[UIImageView alloc] initWithFrame:CGRectMake(30.0f, round(CGRectGetHeight(frame) / 2.0f) - round([iconImage size].height / 2.0f), [iconImage size].width, [iconImage size].height)];
         [iconImageView_ setContentMode:UIViewContentModeCenter];
@@ -137,6 +142,12 @@
         fixedHeight_ = CGRectGetHeight(frame);
         rotateIconWhileBecomingVisible_ = YES;
         
+        pullText_ = MNM_BOTTOM_PTR_PULL_TEXT_KEY;
+        releaseText_ = MNM_BOTTOM_PTR_RELEASE_TEXT_KEY;
+        loadingText_ = MNM_BOTTOM_PTR_LOADING_TEXT_KEY;
+        customPullImage_ = [UIImage imageNamed:MNM_BOTTOM_PTR_ICON_BOTTOM_IMAGE];
+        customBackgroundColor_ = [UIColor grayColor];
+        
         [self changeStateOfControl:MNMBottomPullToRefreshViewStateIdle offset:CGFLOAT_MAX];
     }
     
@@ -153,7 +164,8 @@
     
     [super layoutSubviews];
     
-    CGSize messageSize = [[messageLabel_ text] sizeWithFont:[messageLabel_ font]];
+    NSDictionary *attributes = @{NSFontAttributeName: [messageLabel_ font]};
+    CGSize messageSize = [[messageLabel_ text] sizeWithAttributes:attributes];
     
     CGRect frame = [messageLabel_ frame];
     frame.size.width = messageSize.width;
@@ -177,12 +189,18 @@
         
         case MNMBottomPullToRefreshViewStateIdle: {
             
+            iconImageView_.image = customPullImage_;
+            
+            if (customBackgroundColor_ != nil) {
+                [self setBackgroundColor:customBackgroundColor_];
+            }
+            
             [iconImageView_ setTransform:CGAffineTransformIdentity];
             [iconImageView_ setHidden:NO];
             
             [loadingActivityIndicator_ stopAnimating];
             
-            [messageLabel_ setText:MNM_BOTTOM_PTR_PULL_TEXT_KEY];
+            [messageLabel_ setText:pullText_];
             
             break;
             
@@ -199,7 +217,7 @@
                 [iconImageView_ setTransform:CGAffineTransformIdentity];
             }
             
-            [messageLabel_ setText:MNM_BOTTOM_PTR_PULL_TEXT_KEY];
+            [messageLabel_ setText:pullText_];
             
             break;
             
@@ -207,7 +225,7 @@
             
             [iconImageView_ setTransform:CGAffineTransformMakeRotation(M_PI)];
             
-            [messageLabel_ setText:MNM_BOTTOM_PTR_RELEASE_TEXT_KEY];
+            [messageLabel_ setText:releaseText_];
             
             height = fixedHeight_ + fabs(offset);
             
@@ -219,7 +237,7 @@
             
             [loadingActivityIndicator_ startAnimating];
             
-            [messageLabel_ setText:MNM_BOTTOM_PTR_LOADING_TEXT_KEY];
+            [messageLabel_ setText:loadingText_];
             
             height = fixedHeight_ + fabs(offset);
             

@@ -111,4 +111,15 @@
  */
 - (void)tableViewFinishedLoadData;
 
+/**
+ *  Custom text for refresh view.
+ */
+@property (nonatomic, weak) NSString *pullText;
+@property (nonatomic, weak) NSString *releaseText;
+@property (nonatomic, weak) NSString *loadingText;
+@property (nonatomic, weak) UIColor *customBackgroundColor;
+@property (nonatomic, weak) UIImage *customPullImage;
+
+
+
 @end

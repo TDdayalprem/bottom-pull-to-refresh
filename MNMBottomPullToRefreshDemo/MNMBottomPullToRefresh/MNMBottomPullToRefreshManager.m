@@ -193,13 +193,13 @@ CGFloat const kAnimationDuration = 0.2f;
             
             [UIView animateWithDuration:kAnimationDuration animations:^{
                 
-                if ([table_ contentSize].height >= CGRectGetHeight([table_ frame])) {
+                if ([self->table_ contentSize].height >= CGRectGetHeight([self->table_ frame])) {
                 
-                    [table_ setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, -height, 0.0f)];
+                    [self->table_ setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, -height, 0.0f)];
                     
                 } else {
                     
-                    [table_ setContentInset:UIEdgeInsetsMake(height, 0.0f, 0.0f, 0.0f)];
+                    [self->table_ setContentInset:UIEdgeInsetsMake(height, 0.0f, 0.0f, 0.0f)];
                 }
             }];
         }
@@ -224,15 +224,49 @@ CGFloat const kAnimationDuration = 0.2f;
 		[pullToRefreshView_ changeStateOfControl:MNMBottomPullToRefreshViewStateIdle offset:CGFLOAT_MAX];
 		[UIView animateWithDuration:0.3
 							  animations:^{
-								  _hideAnimationInProgress = YES;
-								  [table_ setContentInset:UIEdgeInsetsZero];
-								  [table_ addObserver:self forKeyPath:@"contentOffset" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:nil];
+            self->_hideAnimationInProgress = YES;
+            [self->table_ setContentInset:UIEdgeInsetsZero];
+            [self->table_ addObserver:self forKeyPath:@"contentOffset" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:nil];
 							  } completion:^(BOOL finished) {
-								  [table_ removeObserver:self forKeyPath:@"contentOffset"];
-								  _hideAnimationInProgress = NO;
+                                  [self->table_ removeObserver:self forKeyPath:@"contentOffset"];
+                                  self->_hideAnimationInProgress = NO;
 								  [self relocatePullToRefreshView];
 							  }];
 	}
+}
+
+#pragma mark -
+#pragma mark properties
+- (void)setPullText:(NSString *)pullText {
+    pullToRefreshView_.pullText = pullText;
+}
+
+- (void)setReleaseText:(NSString *)releaseText {
+    pullToRefreshView_.releaseText = releaseText;
+}
+
+- (void)setLoadingText:(NSString *)loadingText {
+    pullToRefreshView_.loadingText = loadingText;
+}
+
+-(void)setCustomBackgroundColor:(UIColor *)customBackgroundColor{
+    pullToRefreshView_.customBackgroundColor = customBackgroundColor;
+}
+
+- (NSString *)pullText {
+    return pullToRefreshView_.pullText;
+}
+
+- (NSString *)releaseText {
+    return pullToRefreshView_.releaseText;
+}
+
+- (NSString *)loadingText {
+    return pullToRefreshView_.loadingText;
+}
+
+- (UIColor *)customBackgroundColor {
+    return pullToRefreshView_.customBackgroundColor;
 }
 
 @end
